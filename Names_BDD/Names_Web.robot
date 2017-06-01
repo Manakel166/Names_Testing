@@ -1,24 +1,27 @@
 *** Settings ***
 Library           Selenium2Library
 Library           Collections
+Library           RequestsLibrary
 
 *** Variables ***
 ${original_name}    Thor
 ${renamed_name}    Loki
-${app_url}        https://b2u-web.herokuapp.com/
-${selenium_grid_url}    http://127.0.0.1:4441/wd/hub    # http://Manakel166:217e2175-30a5-4fa9-8146-d2350af3a14d@ondemand.saucelabs.com:80/wd/hub
+${app_url}        https://b2u-web.herokuapp.com/ \     # http://localhost:8100/
+${selenium_grid_url}    http://Manakel166:217e2175-30a5-4fa9-8146-d2350af3a14d@ondemand.saucelabs.com:80/wd/hub
 ${target_browser}    Chrome
-${target_browser_version}    57.0
+${target_browser_version}    57
 ${target_platform}    Windows 7
 
 *** Test Cases ***
 I can add a Name
+    [Tags]    WEB    NAMES    P0
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
     Close Browser
 
 I can modfy a Name
+    [Tags]    WEB    NAMES    P0
     Open Names Application
     In Names, List should display:    ${original_name}
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
@@ -27,25 +30,17 @@ I can modfy a Name
     Close Browser
 
 I can delete a Name
+    [Tags]    WEB    NAMES    P3
     Open Names Application
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
     In Names, List should NOT display:    ${renamed_name}
     Close Browser
 
-Names_Web_Old
-    Open in browser
-    Add a Name    ${original_name}
-    Database should have    ${original_name}
-    Modify a Name    ${original_name}    ${renamed_name}
-    Database should have    ${renamed_name}
-    Delete a Name    ${renamed_name}
-    Database should not have    ${renamed_name}
-    Close Browser
-
 *** Keywords ***
 Open Names Application
-    Open Browser    ${app_url}    browser=${target_browser}    remote_url=${selenium_grid_url}
+    ${caps}=    Create Dictionary    version=${target_browser_version}    platform=${target_platform}
+    Open Browser    ${app_url}    browser=${target_browser}    remote_url=${selenium_grid_url}    desired_capabilities=${caps}
     Page Should Contain Element    //h1[contains(.,'Names list')]
 
 In Names, Add :
@@ -54,29 +49,49 @@ In Names, Add :
     Click Element    //button[contains (@class,'bar-buttons')]
     I'm on MainMenu
     Click Element    //button[contains(.,'Add Name')]
-    I'm on AddPages
+    I'm on AddPage
     Input Text    //input[@formcontrolname='name']    ${original_name}
-    Click Element    //button[contains(@class,'button')]
+    Click Element    //button[contains(@class,'button-default')][contains(.,'Add Name')]
 
 In Names, List should display:
     [Arguments]    ${arg1}
-    ${resp}=    Get Request    NamesApp    /names
-    List Should Contain Value    ${resp.json()['names']}    ${arg1}
+    Click Element    //button[contains (@class,'bar-buttons')]
+    I'm on MainMenu
+    Click Element    //button[contains(.,'List')]
+    I'm on ListPage
+    Page Should Contain    ${arg1}
 
 In Names, Modify a Name:
     [Arguments]    ${arg1}    ${arg2}
-    ${header}=    Create Dictionary    Content-Type=application/json
-    ${resp}=    Put Request    NamesApp    /names/${arg1}    data={"newname":"${arg2}"}    headers=${header}
+    Click Element    //button[contains (@class,'bar-buttons')]
+    I'm on MainMenu
+    Click Element    //button[contains(.,'Modify Name')]
+    I'm on ModifyPage
+    Click Element    //*[@formcontrolname='oldName']
+    Click Element    //button[contains(.,'${arg1}')]
+    Click Element    //button[contains(.,'OK')]
+    Click Element    //button[contains(@class,'button-default')][contains(.,'Delete Name')]
 
 In Names, List should NOT display:
     [Arguments]    ${arg1}
-    ${resp}=    Get Request    NamesApp    /names
-    List Should Not Contain Value    ${resp.json()['names']}    ${arg1}
+    Click Element    //button[contains (@class,'bar-buttons')]
+    I'm on MainMenu
+    Click Element    //button[contains(.,'List')]
+    I'm on ListPage
+    Page Should Not Contain    ${arg1}
 
 In Names, Delete a Name:
     [Arguments]    ${arg1}
-    ${header}=    Create Dictionary    Content-Type=application/json
-    Delete Request    NamesApp    /names    data={"name":"${arg1}"}    headers=${header}
+    Click Element    //button[contains (@class,'bar-buttons')]
+    I'm on MainMenu
+    Click Element    //button[contains(.,'Delete Name')]
+    I'm on DeletePage
+    ${source}=    Get Source
+    Log     ${source}
+    Click Element    //*[@formcontrolname='name']
+    Click Element    //button[contains(.,'${arg1}')]
+    Click Element    //button[contains(.,'OK')]
+    Click Element    //button[contains(@class,'button-default')][contains(.,'Delete Name')]
 
 Open in browser
     Open Browser    ${app_url}    Safari    driver1    ${selenium_grid_url}
@@ -121,5 +136,14 @@ I'm on HomePage
 I'm on MainMenu
     Page Should Contain Element    //div[contains(.,'Menu')]
 
-I'm on AddPages
+I'm on AddPage
     Page Should Contain Element    //div[contains(.,'Add Name')][contains(@class,'toolbar-title')]
+
+I'm on ListPage
+    Page Should Contain Element    //div[contains(.,'List')][contains(@class,'toolbar-title')]
+
+I'm on ModifyPage
+    Page Should Contain Element    //div[contains(.,'Modify Name')][contains(@class,'toolbar-title')]
+
+I'm on DeletePage
+    Page Should Contain Element    //div[contains(.,'Delete Name')][contains(@class,'toolbar-title')]
