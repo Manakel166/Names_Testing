@@ -1,4 +1,6 @@
 *** Settings ***
+Suite Setup       Reset Names Database
+Suite Teardown    Delete All Sessions
 Library           RequestsLibrary
 Library           Collections
 
@@ -10,13 +12,11 @@ ${api_end_point}    https://api-rest-b2u.herokuapp.com
 *** Test Cases ***
 I can add a Name
     Open Names Application
-    Reset Names Database
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
 
 I can modfy a Name
     Open Names Application
-    Reset Names Database
     In Names, List should display:    ${original_name}
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
     In Names, List should display:    ${renamed_name}
@@ -24,7 +24,6 @@ I can modfy a Name
 
 I can delete a Name
     Open Names Application
-    Reset Names Database
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
     In Names, List should NOT display:    ${renamed_name}
@@ -59,5 +58,7 @@ In Names, Delete a Name:
     Delete Request    NamesApp    /names    data={"name":"${arg1}"}    headers=${header}
 
 Reset Names Database
-    ${resp}=    Get Request    NamesApp    /INIT
+    Create Session    TempForReset    ${api_end_point}
+    ${resp}=    Get Request    TempForReset    /INIT
     Should Be Equal As Strings    ${resp.status_code}    200
+    Delete All Sessions
