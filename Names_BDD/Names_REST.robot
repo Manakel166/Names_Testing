@@ -40,16 +40,19 @@ In Names, Add :
 In Names, List should display:
     [Arguments]    ${arg1}
     ${resp}=    Get Request    NamesApp    /names
+    Should Be Equal As Strings    200    ${resp.status_code}
     List Should Contain Value    ${resp.json()['names']}    ${arg1}
 
 In Names, Modify a Name:
     [Arguments]    ${arg1}    ${arg2}
     ${header}=    Create Dictionary    Content-Type=application/json
     ${resp}=    Put Request    NamesApp    /names/${arg1}    data={"newname":"${arg2}"}    headers=${header}
+    Should Be Equal As Strings    200    ${resp.status_code}
 
 In Names, List should NOT display:
     [Arguments]    ${arg1}
     ${resp}=    Get Request    NamesApp    /names
+    Should Be Equal As Strings    200    ${resp.status_code}
     List Should Not Contain Value    ${resp.json()['names']}    ${arg1}
 
 In Names, Delete a Name:
