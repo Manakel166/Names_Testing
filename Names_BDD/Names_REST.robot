@@ -58,7 +58,7 @@ In Names, List should NOT display:
 In Names, Delete a Name:
     [Arguments]    ${arg1}
     ${header}=    Create Dictionary    Content-Type=application/json
-    Delete Request    NamesApp    /names    data={"name":"${arg1}"}    headers=${header}
+    Delete Request    NamesApp    /names/${arg1}    headers=${header}
 
 Reset Names Database
     Create Session    TempForReset    ${api_end_point}
