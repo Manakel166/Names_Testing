@@ -6,7 +6,7 @@ Library           RequestsLibrary
 *** Variables ***
 ${original_name}    Thor
 ${renamed_name}    Loki
-${app_url}        https://b2u-web.herokuapp.com/ \     # http://localhost:8100/
+${app_url}        https://b2u-web.herokuapp.com/ \    # http://localhost:8100/
 ${selenium_grid_url}    http://Manakel166:217e2175-30a5-4fa9-8146-d2350af3a14d@ondemand.saucelabs.com:80/wd/hub
 ${target_browser}    Chrome
 ${target_browser_version}    57
@@ -40,6 +40,8 @@ I can delete a Name
 *** Keywords ***
 Open Names Application
     ${caps}=    Create Dictionary    version=${target_browser_version}    platform=${target_platform}
+    ${ff default caps}    Evaluate    sys.modules['selenium.webdriver'].common.desired_capabilities.DesiredCapabilities.FIREFOX    sys,selenium.webdriver
+    Set To Dictionary    ${ff default caps}    marionette=${False}
     Open Browser    ${app_url}    browser=${target_browser}    remote_url=${selenium_grid_url}    desired_capabilities=${caps}
     Page Should Contain Element    //h1[contains(.,'Names list')]
 
@@ -87,7 +89,7 @@ In Names, Delete a Name:
     Click Element    //button[contains(.,'Delete Name')]
     I'm on DeletePage
     ${source}=    Get Source
-    Log     ${source}
+    Log    ${source}
     Click Element    //*[@formcontrolname='name']
     Click Element    //button[contains(.,'${arg1}')]
     Click Element    //button[contains(.,'OK')]
