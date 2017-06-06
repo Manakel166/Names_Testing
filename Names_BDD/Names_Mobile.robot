@@ -9,10 +9,10 @@ ${renamed_name}    Loki
 ${app}            C:/WGROCHUL/STAGIAIRES_SOGETI_2017/LOIC/android-debug.apk
 ${selenium_grid_url}    https://eu1.appium.testobject.com/wd/hub
 ${target_device}    LG_Nexus_4_E960_real
-${ui_burger_menu}    //android.widget.Button \     #[@content-desc='menu']
+${ui_burger_menu}    //android.widget.Button \    #[@content-desc='menu']
 ${ui_menu_add_name}    xpath=//android.widget.Button[contains(@content-desc,'Add Name')]
 ${ui_add_name_input}    //android.widget.EditText[@text='name']
-${ui_add_name_button}    //android.widget.Button[contains(@content-desc,'ADD NAME']
+${ui_add_name_button}    //android.widget.Button[contains(@content-desc,'ADD NAME')]
 
 *** Test Cases ***
 I can add a Name
@@ -50,10 +50,10 @@ In Names, Add :
     I'm on HomePage
     Click Element    ${ui_burger_menu}
     I'm on MainMenu
-    ${source}=    Get Source
-    Log    ${source}
     Click Element    ${ui_menu_add_name}
     I'm on AddPage
+    ${source}=    Get Source
+    Log    ${source}
     Input Text    ${ui_add_name_input}    ${original_name}
     Click Element    ${ui_add_name_button}
 
@@ -101,10 +101,10 @@ I'm on HomePage
     Wait Until Keyword Succeeds    5s    1s    Page Should Contain Element    xpath=//*[@content-desc='Names list']
 
 I'm on MainMenu
-    Page Should Contain Element    //android.view.View[@content-desc='Menu']
+    Wait Until Page Contains Element    //android.view.View[@content-desc='Menu']    3s
 
 I'm on AddPage
-    Page Should Contain Element    //android.view.View[@content-desc='Add Name']
+    Wait Until Page Contains Element    //android.view.View[contains(@content-desc,'Add Name')]    5s
 
 I'm on ListPage
     Wait Until Page Contains Element    xpath=//android.view.View[@content-desc='List']    5s
