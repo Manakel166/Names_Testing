@@ -7,7 +7,12 @@ Library           RequestsLibrary
 ${original_name}    Thor
 ${renamed_name}    Loki
 ${app}            C:/WGROCHUL/STAGIAIRES_SOGETI_2017/LOIC/android-debug.apk
-${selenium_grid_url}    http://Manakel166:217e2175-30a5-4fa9-8146-d2350af3a14d@ondemand.saucelabs.com:80/wd/hub
+${selenium_grid_url}    https://eu1.appium.testobject.com/wd/hub
+${target_device}    LG_Nexus_4_E960_real
+${ui_burger_menu}    //android.widget.Button \     #[@content-desc='menu']
+${ui_menu_add_name}    //android.widget.Button[@content-desc='Add Name']
+${ui_add_name_input}    //android.widget.EditText[@text='name']
+${ui_add_name_button}    //android.widget.Button[@content-desc='ADD NAME']
 
 *** Test Cases ***
 I can add a Name
@@ -24,7 +29,7 @@ I can modfy a Name
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
     In Names, List should display:    ${renamed_name}
     In Names, List should NOT display:    ${original_name}
-    Close Browser
+    Close Application
 
 I can delete a Name
     [Tags]    WEB    NAMES    P3
@@ -32,30 +37,31 @@ I can delete a Name
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
     In Names, List should NOT display:    ${renamed_name}
-    Close Browser
+    Close Application
 
 *** Keywords ***
 Open Names Application
-    Open Application    ${app_url}    browser=${target_browser}    remote_url=${selenium_grid_url}    desired_capabilities=${caps}
-    Page Should Contain Element    //h1[contains(.,'Names list')]
+    ${caps}=    Create Dictionary    testobject_api_key=13502594F29C49178C774B9A18187E40    testobject_device=${target_device}    testobject_appium_version=1.6.4    testobject_app_id=1
+    Open Application    ${selenium_grid_url}    alias=NamesApp    testobject_api_key=13502594F29C49178C774B9A18187E40    testobject_device=${target_device}    testobject_appium_version=1.6.4    testobject_app_id=1
+    Wait Until Keyword Succeeds    30s    5s    Page Should Contain Element    xpath=//*[@content-desc='Names list']
 
 In Names, Add :
     [Arguments]    ${arg1}
     I'm on HomePage
-    Click Element    //button[contains (@class,'bar-buttons')]
+    Click Element    ${ui_burger_menu}
     I'm on MainMenu
-    Click Element    //button[contains(.,'Add Name')]
+    Click Element    ${ui_menu_add_name}
     I'm on AddPage
-    Input Text    //input[@formcontrolname='name']    ${original_name}
-    Click Element    //button[contains(@class,'button-default')][contains(.,'Add Name')]
+    Input Text    ${ui_add_name_input}    ${original_name}
+    Click Element    ${ui_add_name_button}
 
 In Names, List should display:
     [Arguments]    ${arg1}
-    Click Element    //button[contains (@class,'bar-buttons')]
+    Click Element    ${ui_burger_menu}
     I'm on MainMenu
-    Click Element    //button[contains(.,'List')]
+    Click Element    //android.widget.Button[@content-desc='List']
     I'm on ListPage
-    Page Should Contain    ${arg1}
+    Page Should Contain Text    ${arg1}
 
 In Names, Modify a Name:
     [Arguments]    ${arg1}    ${arg2}
@@ -89,54 +95,17 @@ In Names, Delete a Name:
     Click Element    //button[contains(.,'OK')]
     Click Element    //button[contains(@class,'button-default')][contains(.,'Delete Name')]
 
-Open in browser
-    Open Browser    ${app_url}    Safari    driver1    ${selenium_grid_url}
-
-Add a Name
-    [Arguments]    ${name}
-    Click Link    Add name
-    Input Text    name    ${name}
-    Click Button    LoginButton
-    Click Link    Back
-
-Modify a Name
-    [Arguments]    ${oldName}    ${newName}
-    Click Link    Modify name
-    Input Text    oldName    ${oldName}
-    Input Text    newName    ${newName}
-    Click Element    LoginButton
-    Click Link    Back
-
-Delete a Name
-    [Arguments]    ${name}
-    Click Link    Delete name
-    Input Text    name    ${name}
-    Click Button    LoginButton
-    Click Link    Back
-
-Database should have
-    [Arguments]    ${name}
-    Click Link    List names
-    Wait Until Page Contains    ${name}    2s
-    Click Link    Back
-
-Database should not have
-    [Arguments]    ${name}
-    Click Link    List names
-    Wait Until Page Does Not Contain    ${name}    2s
-    Click Link    Back
-
 I'm on HomePage
-    Page Should Contain Element    //h1[contains(.,'Names list')]
+    Wait Until Keyword Succeeds    5s    1s    Page Should Contain Element    xpath=//*[@content-desc='Names list']
 
 I'm on MainMenu
-    Page Should Contain Element    //div[contains(.,'Menu')]
+    Page Should Contain Element    //android.view.View[@content-desc='Menu']
 
 I'm on AddPage
-    Page Should Contain Element    //div[contains(.,'Add Name')][contains(@class,'toolbar-title')]
+    Page Should Contain Element    //android.view.View[@content-desc='Add Name']
 
 I'm on ListPage
-    Page Should Contain Element    //div[contains(.,'List')][contains(@class,'toolbar-title')]
+    Wait Until Page Contains Element    xpath=//android.view.View[@content-desc='List']    5s
 
 I'm on ModifyPage
     Page Should Contain Element    //div[contains(.,'Modify Name')][contains(@class,'toolbar-title')]
