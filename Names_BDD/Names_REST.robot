@@ -7,17 +7,17 @@ Library           Collections
 *** Variables ***
 ${original_name}    Thor
 ${renamed_name}    Loki
-${api_end_point}    https://api-rest-b2u.herokuapp.com
+${api_end_point}    https://b2u-rest.herokuapp.com
 
 *** Test Cases ***
 I can add a Name
-    [Tags]    REST    NAMES    P0
+    [Tags]    P0    _REST
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
 
 I can modfy a Name
-    [Tags]    REST    NAMES    P0
+    [Tags]    P0    _REST
     Open Names Application
     In Names, List should display:    ${original_name}
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
@@ -25,7 +25,7 @@ I can modfy a Name
     In Names, List should NOT display:    ${original_name}
 
 I can delete a Name
-    [Tags]    REST    NAMES    P3
+    [Tags]    P3    _REST
     Open Names Application
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
