@@ -11,7 +11,7 @@ ${api_end_point}    https://b2u-rest.herokuapp.com
 
 *** Test Cases ***
 I can add a Name
-    [Tags]    _REST
+    [Tags]    _REST    C0
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}

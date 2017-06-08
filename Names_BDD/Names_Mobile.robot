@@ -1,4 +1,5 @@
 *** Settings ***
+Suite Setup       Reset Names Database
 Library           AppiumLibrary
 Library           Collections
 Library           RequestsLibrary
@@ -7,6 +8,7 @@ Library           RequestsLibrary
 ${original_name}    Thor
 ${renamed_name}    Loki
 ${app}            C:/WGROCHUL/STAGIAIRES_SOGETI_2017/LOIC/android-debug.apk
+${api_end_point}    https://b2u-rest.herokuapp.com
 ${selenium_grid_url}    https://eu1.appium.testobject.com/wd/hub
 ${target_device}    LG_Nexus_4_E960_real    # \ Motorola_Moto_E_2nd_gen_free
 ${ui_burger_menu}    //android.widget.Button \    #[@content-desc='menu']
@@ -16,7 +18,7 @@ ${ui_add_name_button}    //android.widget.Button[contains(@content-desc,'ADD NAM
 
 *** Test Cases ***
 I can add a Name
-    [Tags]    _MOBILE
+    [Tags]    _MOBILE    C0
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
@@ -120,3 +122,9 @@ I'm on ModifyPage
 I'm on DeletePage
     Page Should Contain Element    //div[contains(.,'Delete Name')][contains(@class,'toolbar-title')]
     Capture Page ScreenShot
+
+Reset Names Database
+    Create Session    TempForReset    ${api_end_point}
+    ${resp}=    Get Request    TempForReset    /INIT
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Delete All Sessions

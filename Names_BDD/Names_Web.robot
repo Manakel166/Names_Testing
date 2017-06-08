@@ -1,4 +1,5 @@
 *** Settings ***
+Suite Setup       Reset Names Database
 Library           Selenium2Library
 Library           Collections
 Library           RequestsLibrary
@@ -23,10 +24,11 @@ ${ui_button_modify_name}    //button[contains(@class,'button-default')][contains
 ${ui_menu_delete_name}    //button[contains(.,'Delete Name')]
 ${ui_input_name_to_delete}    //*[@formcontrolname='name']
 ${ui_button_delete_name}    //button[contains(@class,'button-default')][contains(.,'Delete Name')]
+${api_end_point}    https://b2u-rest.herokuapp.com
 
 *** Test Cases ***
 I can add a Name
-    [Tags]    _WEB
+    [Tags]    _WEB    C0
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
@@ -56,7 +58,7 @@ Open Names Application
     Set To Dictionary    ${ff default caps}    marionette=${False}
     Open Browser    ${app_url}    browser=${target_browser}    remote_url=${selenium_grid_url}    desired_capabilities=${caps}
     Page Should Contain Element    //h1[contains(.,'Names list')]
-    Set Tags    Browser:${target_browser}    Version:${target_browser}.{target_browser_version}    Platform:${target_platform}
+    Set Tags    Browser:${target_browser}    Version:${target_browser}.${target_browser_version}    Platform:${target_platform}
 
 In Names, Add :
     [Arguments]    ${arg1}
@@ -132,3 +134,9 @@ I'm on ModifyPage
 
 I'm on DeletePage
     Page Should Contain Element    //div[contains(.,'Delete Name')][contains(@class,'toolbar-title')]
+
+Reset Names Database
+    Create Session    TempForReset    ${api_end_point}
+    ${resp}=    Get Request    TempForReset    /INIT
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Delete All Sessions
