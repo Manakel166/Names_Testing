@@ -10,9 +10,9 @@ ${original_name}    Thor
 ${renamed_name}    Loki
 ${app_url}        https://b2u-web.herokuapp.com/    # http://localhost:8100/
 ${selenium_grid_url}    http://Manakel166:217e2175-30a5-4fa9-8146-d2350af3a14d@ondemand.saucelabs.com:80/wd/hub
-${target_browser}    Chrome
-${target_browser_version}    57
-${target_platform}    Windows 7
+${target_browser}    Safari
+${target_browser_version}    8
+${target_platform}    MAC
 ${ui_burger_menu}    //button[contains (@class,'bar-buttons')]
 ${ui_menu_add_name}    //button[contains(.,'Add Name')]
 ${ui_add_name_input}    //input[@formcontrolname='name']
@@ -70,6 +70,7 @@ In Names, Add :
     I'm on AddPage
     Input Text    ${ui_add_name_input}    ${original_name}
     Click Element    ${ui_add_name_button}
+    Capture Page Screenshot
 
 In Names, List should display:
     [Arguments]    ${arg1}
@@ -78,6 +79,7 @@ In Names, List should display:
     Click Element    ${ui_menu_list}
     I'm on ListPage
     Page Should Contain    ${arg1}
+    Capture Page Screenshot
 
 In Names, Modify a Name:
     [Arguments]    ${arg1}    ${arg2}
@@ -88,11 +90,10 @@ In Names, Modify a Name:
     Click Element    ${ui_input_old_name}
     Click Element    //button[contains(.,'${arg1}')]
     Click Element    //button[contains(.,'OK')]
-    ${source}=    Get Source
-    Log    ${source}
     Capture Page Screenshot
     Input Text    ${ui_input_new_name}    ${arg2}
     Click Element    ${ui_button_modify_name}
+    Capture Page Screenshot
 
 In Names, List should NOT display:
     [Arguments]    ${arg1}
@@ -100,7 +101,9 @@ In Names, List should NOT display:
     I'm on MainMenu
     Click Element    //button[contains(.,'List')]
     I'm on ListPage
+    Capture Page Screenshot
     Page Should Not Contain    ${arg1}
+    Capture Page Screenshot
 
 In Names, Delete a Name:
     [Arguments]    ${arg1}
@@ -108,12 +111,12 @@ In Names, Delete a Name:
     I'm on MainMenu
     Click Element    ${ui_menu_delete_name}
     I'm on DeletePage
-    ${source}=    Get Source
-    Log    ${source}
     Click Element    ${ui_input_name_to_delete}
     Click Element    //button[contains(.,'${arg1}')]
     Click Element    //button[contains(.,'OK')]
+    Capture Page Screenshot
     Click Element    ${ui_button_delete_name}
+    Capture Page Screenshot
 
 Open in browser
     Open Browser    ${app_url}    Safari    driver1    ${selenium_grid_url}
