@@ -20,7 +20,7 @@ I can add a Name
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
-    Close Application
+    [Teardown]    Close Application
 
 I can modfy a Name
     [Tags]    _MOBILE
@@ -29,7 +29,7 @@ I can modfy a Name
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
     In Names, List should display:    ${renamed_name}
     In Names, List should NOT display:    ${original_name}
-    Close Application
+    [Teardown]    Close Application
 
 I can delete a Name
     [Tags]    _MOBILE
@@ -37,12 +37,13 @@ I can delete a Name
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
     In Names, List should NOT display:    ${renamed_name}
-    Close Application
+    [Teardown]    Close Application
 
 *** Keywords ***
 Open Names Application
     Open Application    ${selenium_grid_url}    alias=NamesApp    testobject_api_key=13502594F29C49178C774B9A18187E40    testobject_device=${target_device}    testobject_appium_version=1.6.4    testobject_app_id=1
     Wait Until Keyword Succeeds    30s    5s    Page Should Contain Element    xpath=//*[@content-desc='Names list']
+    Set Tags    Platform:Android    device:${target_device}
 
 In Names, Add :
     [Arguments]    ${arg1}

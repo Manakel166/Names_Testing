@@ -30,7 +30,7 @@ I can add a Name
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
-    Close Browser
+    [Teardown]    Close Browser
 
 I can modfy a Name
     [Tags]    _WEB
@@ -39,7 +39,7 @@ I can modfy a Name
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
     In Names, List should display:    ${renamed_name}
     In Names, List should NOT display:    ${original_name}
-    Close Browser
+    [Teardown]    Close Browser
 
 I can delete a Name
     [Tags]    _WEB
@@ -47,7 +47,7 @@ I can delete a Name
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
     In Names, List should NOT display:    ${renamed_name}
-    Close Browser
+    [Teardown]    Close Browser
 
 *** Keywords ***
 Open Names Application
@@ -56,6 +56,7 @@ Open Names Application
     Set To Dictionary    ${ff default caps}    marionette=${False}
     Open Browser    ${app_url}    browser=${target_browser}    remote_url=${selenium_grid_url}    desired_capabilities=${caps}
     Page Should Contain Element    //h1[contains(.,'Names list')]
+    Set Tags    Browser:${target_browser}    Version:${target_browser}.{target_browser_version}    Platform:${target_platform}
 
 In Names, Add :
     [Arguments]    ${arg1}
