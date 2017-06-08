@@ -8,7 +8,7 @@ ${original_name}    Thor
 ${renamed_name}    Loki
 ${app}            C:/WGROCHUL/STAGIAIRES_SOGETI_2017/LOIC/android-debug.apk
 ${selenium_grid_url}    https://eu1.appium.testobject.com/wd/hub
-${target_device}    Motorola_Moto_E_2nd_gen_free    # LG_Nexus_4_E960_real
+${target_device}    LG_Nexus_4_E960_real    # \ Motorola_Moto_E_2nd_gen_free
 ${ui_burger_menu}    //android.widget.Button \    #[@content-desc='menu']
 ${ui_menu_add_name}    xpath=//android.widget.Button[contains(@content-desc,'Add Name')]
 ${ui_add_name_input}    //android.widget.EditText[@text='name']
@@ -16,14 +16,14 @@ ${ui_add_name_button}    //android.widget.Button[contains(@content-desc,'ADD NAM
 
 *** Test Cases ***
 I can add a Name
-    [Tags]    P0    _MOBILE
+    [Tags]    _MOBILE
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
     Close Application
 
 I can modfy a Name
-    [Tags]    P0    _MOBILE
+    [Tags]    _MOBILE
     Open Names Application
     In Names, List should display:    ${original_name}
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
@@ -32,7 +32,7 @@ I can modfy a Name
     Close Application
 
 I can delete a Name
-    [Tags]    P3    _MOBILE
+    [Tags]    _MOBILE
     Open Names Application
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
@@ -42,7 +42,6 @@ I can delete a Name
 *** Keywords ***
 Open Names Application
     Open Application    ${selenium_grid_url}    alias=NamesApp    testobject_api_key=13502594F29C49178C774B9A18187E40    testobject_device=${target_device}    testobject_appium_version=1.6.4    testobject_app_id=1
-    ...    automationName=UIAutomator
     Wait Until Keyword Succeeds    30s    5s    Page Should Contain Element    xpath=//*[@content-desc='Names list']
 
 In Names, Add :

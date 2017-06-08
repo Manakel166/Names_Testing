@@ -26,14 +26,14 @@ ${ui_button_delete_name}    //button[contains(@class,'button-default')][contains
 
 *** Test Cases ***
 I can add a Name
-    [Tags]    P0    _WEB
+    [Tags]    _WEB
     Open Names Application
     In Names, Add :    ${original_name}
     In Names, List should display:    ${original_name}
     Close Browser
 
 I can modfy a Name
-    [Tags]    P0    _WEB
+    [Tags]    _WEB
     Open Names Application
     In Names, List should display:    ${original_name}
     In Names, Modify a Name:    ${original_name}    ${renamed_name}
@@ -42,7 +42,7 @@ I can modfy a Name
     Close Browser
 
 I can delete a Name
-    [Tags]    P3    _WEB
+    [Tags]    _WEB
     Open Names Application
     In Names, List should display:    ${renamed_name}
     In Names, Delete a Name:    ${renamed_name}
