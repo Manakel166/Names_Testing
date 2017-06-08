@@ -45,7 +45,7 @@ I can delete a Name
 Open Names Application
     Open Application    ${selenium_grid_url}    alias=NamesApp    testobject_api_key=13502594F29C49178C774B9A18187E40    testobject_device=${target_device}    testobject_appium_version=1.6.4    testobject_app_id=1
     Wait Until Keyword Succeeds    30s    5s    Page Should Contain Element    xpath=//*[@content-desc='Names list']
-    Set Tags    Platform:Android    device:${target_device}
+    Comment    Set Tags    Platform:Android    device:${target_device}
 
 In Names, Add :
     [Arguments]    ${arg1}

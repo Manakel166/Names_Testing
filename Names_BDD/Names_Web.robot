@@ -59,7 +59,7 @@ Open Names Application
     Set To Dictionary    ${ff default caps}    marionette=${False}
     Open Browser    ${app_url}    browser=${target_browser}    remote_url=${selenium_grid_url}    desired_capabilities=${caps}
     Page Should Contain Element    //h1[contains(.,'Names list')]
-    Set Tags    Browser:${target_browser}    Version:${target_browser}.${target_browser_version}    Platform:${target_platform}
+    Comment    Set Tags    Browser:${target_browser}    Version:${target_browser}.${target_browser_version}    Platform:${target_platform}
 
 In Names, Add :
     [Arguments]    ${arg1}
