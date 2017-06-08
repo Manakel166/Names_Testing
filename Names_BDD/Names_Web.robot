@@ -1,5 +1,6 @@
 *** Settings ***
 Suite Setup       Reset Names Database
+Suite Teardown    Export Browser Info
 Library           Selenium2Library
 Library           Collections
 Library           RequestsLibrary
@@ -140,3 +141,6 @@ Reset Names Database
     ${resp}=    Get Request    TempForReset    /INIT
     Should Be Equal As Strings    ${resp.status_code}    200
     Delete All Sessions
+
+Export Browser Info
+    Log    Test was run on ${target_browser} in version ${target_browser_version} on platform ${target_platform}
